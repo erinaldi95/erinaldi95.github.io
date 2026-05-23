@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emiliano Rinaldi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #0a0a0a;
+    --text-secondary: #2a2a2a;
+    --text-muted: #6b7280;
+    --blue: #0e7490;
+    --blue-light: #ecfeff;
+    --coral: #0e7490;
+    --border: #e5e7eb;
+    --card-bg: #ffffff;
+    --abstract-bg: #f8fafc;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0c0c0c;
+    --text: #f0efe9;
+    --text-secondary: #c0bfba;
+    --text-muted: #888;
+    --blue: #67e8f9;
+    --blue-light: #134e4a;
+    --coral: #67e8f9;
+    --border: #2a2a2a;
+    --card-bg: #161616;
+    --abstract-bg: #131313;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 14px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  ::selection { background: var(--blue); color: var(--bg); }
+
+  .theme-toggle {
+    position: fixed; top: 24px; right: 24px;
+    width: 40px; height: 40px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    background: var(--card-bg);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; transition: all 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--blue); }
+  .theme-toggle svg { width: 17px; height: 17px; stroke: var(--text); fill: none; stroke-width: 1.5; }
+
+  .container {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 56px 60px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 80px;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 48px;
+    text-align: center;
+    align-self: start;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .sidebar::-webkit-scrollbar { display: none; }
+
+  .name {
+    font-family: 'Inter', sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 22px;
+    color: var(--text);
+    line-height: 1.15;
+  }
+
+  .profile-photo {
+    display: inline-block;
+    margin-bottom: 22px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .profile-img {
+    width: 240px; height: 240px;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px;
+  }
+
+  .title { color: var(--text-secondary); font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .affiliation { color: var(--text-muted); font-size: 13px; margin-bottom: 22px; }
+
+  .links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-top: 22px;
+    font-size: 13px;
+  }
+  .links-row a {
+    color: var(--blue);
+    text-decoration: none;
+    padding: 0 10px;
+    border-left: 1px solid var(--border);
+    transition: opacity 0.2s;
+  }
+  .links-row a:first-child { padding-left: 0; border-left: none; }
+  .links-row a:hover { opacity: 0.55; }
+
+  .contact a {
+    display: inline-block;
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .contact a::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 0; height: 1.5px; background: var(--blue); transition: width 0.3s; }
+  .contact a:hover::after { width: 100%; }
+
+  .address { color: var(--text-muted); font-size: 13px; line-height: 1.7; margin-top: 10px; }
+
+  .main { }
+
+  .main h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--blue);
+    margin-bottom: 22px;
+    margin-top: 44px;
+    padding-bottom: 0;
+    border-bottom: none;
+    scroll-margin-top: 30px;
+  }
+  .main h2:first-of-type { margin-top: 0; }
+
+  .intro { font-size: 14px; line-height: 1.85; color: var(--text-secondary); margin-bottom: 14px; }
+  .intro:first-of-type { margin-top: 52px; }
+
+  .placement-link {
+    color: var(--blue); font-weight: 700; text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .placement-link:hover { opacity: 0.5; }
+
+  .paper { margin-bottom: 22px; padding-bottom: 4px; }
+  .paper:last-child { margin-bottom: 0; }
+
+  .paper-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--blue);
+    margin-bottom: 4px;
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .jmp-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--blue);
+    opacity: 0.8;
+    letter-spacing: 0;
+  }
+
+  .status-tag {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    background: var(--blue-light);
+    color: var(--blue);
+    border-radius: 999px;
+    vertical-align: middle;
+  }
+
+  .coauthors { color: var(--text-muted); font-size: 13px; margin-bottom: 6px; font-style: italic; }
+  .coauthors a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .coauthors a:hover { color: var(--coral); }
+  .paper-info { color: var(--text-muted); font-size: 11px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .award {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .award a { color: var(--blue); text-decoration: none; transition: opacity 0.2s; }
+  .award a:hover { opacity: 0.5; }
+
+  .status-line {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .status-line strong { font-weight: 700; font-style: normal; color: var(--text); }
+
+  .rr-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 12px;
+    background: var(--blue-light);
+    color: var(--blue);
+    border-radius: 999px;
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
+  }
+  .rr-pill strong { font-weight: 700; }
+
+  .paper-links { display: flex; gap: 0; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+  .paper-links a {
+    color: var(--blue); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    transition: opacity 0.2s;
+    padding: 0 12px;
+    border-left: 1px solid var(--border);
+  }
+  .paper-links a:first-child { padding-left: 0; border-left: none; }
+  .paper-links a:hover { opacity: 0.55; }
+  .paper-links a.disabled { color: var(--text-muted); cursor: default; font-weight: 400; }
+  .paper-links a.disabled:hover { opacity: 1; }
+
+  .expandable {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 18px;
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    border-left: 3px solid var(--blue);
+    background: var(--abstract-bg);
+    border-radius: 0 4px 4px 0;
+  }
+  .expandable.show { display: block; animation: fadeIn 0.25s ease; }
+  .expandable strong { color: var(--text); font-weight: 700; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+  .teaching-group { margin-bottom: 10px; }
+
+  .teaching-group h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+  }
+
+  .teaching-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+
+  .course-code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px; font-weight: 700;
+    color: var(--blue);
+    min-width: 80px;
+    letter-spacing: 0.5px;
+  }
+  .course-title { color: var(--text-secondary); flex: 1; font-weight: 400; }
+  .course-level { color: var(--text-muted); font-size: 11px; font-style: italic; }
+
+  .eval-btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 4px 12px;
+    background: var(--blue-light);
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-radius: 999px;
+    transition: background 0.25s, color 0.25s;
+  }
+  .eval-btn:hover { background: var(--blue); color: var(--bg); }
+
+  @media (max-width: 768px) {
+    .container { grid-template-columns: 1fr; padding: 36px 24px; gap: 44px; }
+    .sidebar { position: static; max-height: none; overflow: visible; }
+    .profile-photo { margin-bottom: 24px; }
+    .profile-img { width: 200px; height: 200px; }
+    .theme-toggle { top: 16px; right: 16px; }
+    .intro:first-of-type { margin-top: 0; }
+  }
+</style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <svg viewBox="0 0 24 24" class="moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    <svg viewBox="0 0 24 24" class="sun" style="display:none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+  </button>
+
+  <div class="container">
+    <div class="sidebar">
+      <div class="name">Emiliano Rinaldi</div>
+      <div class="profile-photo">
+        <img src="Profile.png" alt="Emiliano Rinaldi" class="profile-img">
+      </div>
+      <div class="title">PhD Candidate in Economics</div>
+      <div class="affiliation">London School of Economics</div>
+      <div class="contact">
+        <a href="mailto:E.Rinaldi@lse.ac.uk">E.Rinaldi@lse.ac.uk</a>
+      </div>
+      <div class="address">32 Lincoln's Inn Fields<br>London WC2A 3PH, UK</div>
+      <div class="links-row">
+        <a href="files/Rinaldi_CV.pdf" target="_blank">CV</a>
+        <a href="https://www.lse.ac.uk/economics/people/phd-students" target="_blank">LSE</a>
+        <a href="https://scholar.google.com/" target="_blank">Google Scholar</a>
+      </div>
+    </div>
+
+    <div class="main">
+      <p class="intro">I am a 5th year PhD student in Economics at the London School of Economics. My research is in spatial and environmental economics, with a focus on how cities adjust to climate shocks.</p>
+      <p class="intro">I will be on the academic job market in 2026&ndash;27.</p>
+
+      <h2 id="working-papers">Working Papers</h2>
+
+      <div class="paper">
+        <div class="paper-title">Permanent Scars from Temporary Shocks: Evidence from Cape Town's Water Crisis <span class="jmp-tag">(Job Market Paper)</span></div>
+
+        <div class="paper-links">
+          <a href="#" onclick="toggle('abs1'); return false;">+ Abstract</a>
+          <a href="files/jmp.pdf" target="_blank">Paper</a>
+          <a href="#" onclick="toggle('fund1'); return false;">+ Funders &amp; Partners</a>
+        </div>
+        <div class="expandable" id="abs1">[Replace with your abstract. Aim for 200&ndash;250 words. Pose the question, summarise the setting and identification strategy, headline the main result, and close with the quantitative implication or model exercise.]</div>
+        <div class="expandable" id="fund1"><strong>Funders &amp; Partners:</strong> STICERD, International Growth Centre (IGC), South African National Treasury.</div>
+      </div>
+
+      <div class="paper">
+        <div class="paper-title">Productivity and the Grid: The Welfare Cost of Spatially Unequal Electricity in Accra</div>
+
+        <div class="paper-links">
+          <a href="#" onclick="toggle('abs2'); return false;">+ Abstract</a>
+          <a href="#" class="disabled">Draft coming soon</a>
+          <a href="#" onclick="toggle('fund2'); return false;">+ Funders &amp; Partners</a>
+        </div>
+        <div class="expandable" id="abs2">[Replace with the Accra paper abstract once the draft is ready. In the meantime, a paragraph describing the research question and approach is fine.]</div>
+        <div class="expandable" id="fund2"><strong>Funders &amp; Partners:</strong> Structural Transformation and Economic Growth (STEG, grant STEG_LOA_4475_Rinaldi), International Growth Centre (IGC).</div>
+      </div>
+
+      <h2 id="work-in-progress">Work in Progress</h2>
+
+      <div class="paper">
+        <div class="paper-title">[Project title]</div>
+        <div class="coauthors">with [Coauthor name, if any]</div>
+        <div class="paper-links">
+          <a href="#" onclick="toggle('abs3'); return false;">+ Abstract</a>
+        </div>
+        <div class="expandable" id="abs3">[One paragraph describing the project.]</div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.querySelector('.moon').style.display = t === 'dark' ? 'none' : 'block';
+      document.querySelector('.sun').style.display = t === 'dark' ? 'block' : 'none';
+    }
+    function toggle(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('show');
+      const link = document.querySelector(`[onclick="toggle('${id}'); return false;"]`);
+      if (link) {
+        const t = link.textContent;
+        link.textContent = t.startsWith('+') ? t.replace('+','−') : t.replace('−','+');
+      }
+    }
+  </script>
+</body>
+</html>
